@@ -14,6 +14,32 @@ async function getUsers(req:any, res:any){
     }
 } 
 
+async function getUserById(req:any, res:any) {
+    try{
+        const id = Number(req.params.id);
+
+        const user = await prisma.user.findUnique({
+            where:{
+                id:id
+            }
+        })
+
+        if(!user){
+            return res.status(404).json({
+                error: "Usuário não encontrado"
+            })
+        }
+
+        return res.json(user);
+    }
+    catch(error){
+        console.error(error);
+
+        return res.status(500).json({
+            error:"Erro ao buscar usuário"
+        })
+    }
+}
 
 async function addUser(req: any, res: any) {
     try{
@@ -42,4 +68,4 @@ async function addUser(req: any, res: any) {
     }
 }
 
-export { getUsers, addUser }
+export { getUsers, addUser, getUserById }

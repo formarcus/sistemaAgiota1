@@ -68,4 +68,83 @@ async function addUser(req: any, res: any) {
     }
 }
 
-export { getUsers, addUser, getUserById }
+async function updateUser(req:any, res:any) {
+    try{
+        const id = Number(req.params.id);
+
+        const {
+            name,
+            phone,
+            email
+        } = req.body;
+
+        const userExists = await prisma.user.findUnique({
+            where: {
+                id: id
+            }
+        })
+
+        if(!userExists){
+            return res.status(404).json({
+                error: "Usuário não encontrado"
+            })
+        }
+
+        const user = await prisma.user.update({
+            where:{
+                id: id
+            },
+            data: {
+                name,
+                phone,
+                email
+            }
+        })
+
+        return res.json(user)
+    }
+    catch(error){
+        console.error(error);
+        return res.status(500).json({
+            error: "Erro ao atualizar usuário"
+        })
+    }
+}
+
+async function deleteUser(req: any, res: any){
+    try{
+        const id = Number(req.params.id)
+
+        const userExists = await prisma.user.findUnique({
+            where: {
+                id: id
+            }
+        })
+
+        if(!userExists){
+            return res.status(404).json({
+                error: "Usuário não encontrado"
+            })
+        }
+
+        await prisma.user.delete({
+            where: {
+                id: id
+            }
+        })
+
+        return res.json({
+            message: "Usuário excluido com sucesso"
+        })
+    }
+    catch(error){
+        console.error(error)
+
+        return res.status(500).json({
+            error: "Erro ao excluir usuário"
+        })
+    }
+    
+}
+
+export { getUsers, addUser, getUserById, updateUser, deleteUser }

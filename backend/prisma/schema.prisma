@@ -18,5 +18,30 @@ model User {
   name      String
   phone     String?
   email     String?
+  active    Boolean @default(true)
   createdAt DateTime @default(now())
+
+  debts     Debt[]
+}
+
+model Debt {
+  id            Int @id @default(autoincrement())
+  description   String
+  amount        Float
+  dueDate       DateTime?
+  createdAt     DateTime @default(now())
+
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id])
+
+  payments      Payment[]
+}
+
+model Payment {
+  id            Int @id @default(autoincrement())
+  amount        Float
+  paidAt        DateTime @default(now())
+
+  debtId        Int
+  debt          Debt @relation(fields: [debtId], references: [id])
 }

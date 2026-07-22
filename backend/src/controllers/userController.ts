@@ -1,5 +1,5 @@
 //import {prisma} from "../prisma.ts"
-import { response } from "express";
+// import { response } from "express";
 import {prisma} from "../prisma.ts";
 
 async function getUsers(req:any, res:any){

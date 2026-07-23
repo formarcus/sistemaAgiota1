@@ -131,7 +131,7 @@ async function getDebtSummary(req:any, res:any) {
         });
     }
     catch(error){
-        console.error(error):
+        console.error(error)
 
         return res.satus(500).json({
             error: "Erro ao calcular resumo da dívada"

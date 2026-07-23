@@ -27,7 +27,7 @@ model User {
 model Debt {
   id            Int @id @default(autoincrement())
   description   String
-  amount        Float
+  amount        Int
   dueDate       DateTime?
   createdAt     DateTime @default(now())
 
@@ -39,7 +39,7 @@ model Debt {
 
 model Payment {
   id            Int @id @default(autoincrement())
-  amount        Float
+  amount        Int
   paidAt        DateTime @default(now())
 
   debtId        Int

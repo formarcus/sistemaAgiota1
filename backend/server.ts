@@ -14,8 +14,7 @@ app.use('/debts', debtRouter);
 app.use('/payments', paymentRouter);
 
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}/`)
-    userRouter
+    console.log(`Servidor rodando em http://localhost:${PORT}`)
 })
 
 // app.get('/', (req, res) => {

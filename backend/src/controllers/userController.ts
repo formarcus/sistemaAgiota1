@@ -1,6 +1,7 @@
 //import {prisma} from "../prisma.ts"
 // import { response } from "express";
 import {prisma} from "../prisma.ts";
+import { fromCents } from "../utils/money.ts";
 
 async function getUsers(req:any, res:any){
     try {
@@ -37,6 +38,64 @@ async function getUserById(req:any, res:any) {
 
         return res.status(500).json({
             error:"Erro ao buscar usuário"
+        })
+    }
+}
+
+async function getUserSummary(req: any, res: any){
+    try{
+        const id = Number(req.params.id)
+
+        const user = await prisma.user.findUnique({
+            where: {
+                id: id
+            },
+            include:{
+                debts:{
+                    include:{
+                        payments:true
+                    }
+                }
+            }
+        })
+
+        if(!user){
+            return res.status(404).json({
+                error: "Usuário não encontrado"
+            })
+        }
+        
+        let totalDebts = 0;
+        let totalPaid = 0;
+
+        for(const debt of user.debts){
+            totalDebts += debt.amount;
+
+            for(const payment of debt.payments){
+                totalPaid += payment.amount;
+            }
+        }
+
+        const totalOwed = totalDebts - totalPaid;
+
+        return res.json({
+            user: {
+                id: user.id,
+                name: user.name,
+                phone: user.phone,
+                email: user.email,
+            },
+
+            totalDebts: fromCents(totalDebts),
+            totalPaid: fromCents(totalPaid),
+            totalOwed: fromCents(totalOwed)
+        })
+    }
+    catch(error){
+        console.error(error)
+
+        return res.status(500).json({
+            error: "Erro ao calcular resumo usuário"
         })
     }
 }
@@ -147,4 +206,11 @@ async function deleteUser(req: any, res: any){
     
 }
 
-export { getUsers, addUser, getUserById, updateUser, deleteUser }
+export { 
+    getUsers,
+    getUserById, 
+    getUserSummary,
+    addUser,
+    updateUser, 
+    deleteUser
+}

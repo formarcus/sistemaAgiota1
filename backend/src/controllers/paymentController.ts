@@ -1,4 +1,5 @@
 import {prisma} from "../prisma.ts"
+import { toCents, fromCents } from "../utils/money.ts";
 
 async function createPayment(req:any, res:any) {
     try{
@@ -28,8 +29,9 @@ async function createPayment(req:any, res:any) {
         )
 
         const remaining = debt.amount - totalPaid
+        const paymentAmount = toCents(amount)
 
-        if(Number(amount) > remaining){
+        if(paymentAmount > remaining){
             return res.status(400).json({
                 error: "O pagamento é maior que o saldo da dívida"
             })
@@ -37,12 +39,15 @@ async function createPayment(req:any, res:any) {
         
         const payment = await prisma.payment.create({
             data: {
-                amount: Number(amount),
+                amount: paymentAmount,
                 debtId: Number(debtId)
             }
         })
 
-        return res.status(201).json(payment)
+        return res.status(201).json({
+            ...payment,
+            amount: fromCents(payment.amount)
+        })
     }
     catch(error){
         console.error(error)

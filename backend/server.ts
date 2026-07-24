@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors"
 import {router as userRouter} from "./src/routers/userRoutes.ts"
 import {router as debtRouter} from "./src/routers/debtRoutes.ts"
 import {router as paymentRouter} from "./src/routers/paymentRoutes.ts"
@@ -8,6 +9,8 @@ import {router as dashboardRouter} from "./src/routers/dashboardRoutes.ts"
 
 const app = express();
 const PORT = 3000;
+
+app.use(cors())
 
 app.use(express.json());
 app.use('/users', userRouter);

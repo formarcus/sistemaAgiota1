@@ -3,9 +3,10 @@ import {
     getUsers, 
     getUserById,
     getUserSummary,
-    addUser, 
+    getUserDebts,
+    createdUser, 
     updateUser,
-    deleteUser
+    deactivateUser
  } from "../controllers/userController.ts"
 
 
@@ -14,10 +15,11 @@ const router = express.Router();
 // const { getUsers } = require("../controllers/userController");
 
 router.get('/', getUsers);
+router.post('/', createdUser);
 router.get('/:id', getUserById);
 router.get('/:id/summary', getUserSummary);
-router.post('/', addUser);
-router.post('/:id', updateUser);
-router.delete('/:id', deleteUser);
+router.get('/:id/debts', getUserDebts);
+router.put('/:id', updateUser);
+router.delete('/:id', deactivateUser);
 
 export { router } 

@@ -109,6 +109,7 @@ async function getDebtSummary(req:any, res:any) {
 
         const totalOwed = debt.amount - totalPaid;
 
+        
         return res.json({
             debtId: debt.id,
 

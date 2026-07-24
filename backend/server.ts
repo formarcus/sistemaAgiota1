@@ -2,6 +2,7 @@ import express from "express";
 import {router as userRouter} from "./src/routers/userRoutes.ts"
 import {router as debtRouter} from "./src/routers/debtRoutes.ts"
 import {router as paymentRouter} from "./src/routers/paymentRoutes.ts"
+import {router as dashboardRouter} from "./src/routers/dashboardRoutes.ts"
 
 //import userRouter from "./src/routers/userRoutes"
 
@@ -12,13 +13,8 @@ app.use(express.json());
 app.use('/users', userRouter);
 app.use('/debts', debtRouter);
 app.use('/payments', paymentRouter);
+app.use('/dashboard', dashboardRouter)
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`)
 })
-
-// app.get('/', (req, res) => {
-//     res.json({
-//         message: "API do sistema está funcionando!"
-//     })
-// })

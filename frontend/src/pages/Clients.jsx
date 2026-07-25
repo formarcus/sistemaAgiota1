@@ -1,9 +1,30 @@
 import { isValidElement, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
+import api from "../services/api"
 
 function Clients() {
     const [clients, setClients] = useState([])
     const [loading, setLoading] = useState(true)
+
+    async function handleDeactivate(id) {
+
+        const confirmed = window.confirm("Deseja realmente desativar este cliente?")
+
+        if (!confirmed) {
+            return
+        }
+
+        try {
+            await api.delete(`/users/${id}`)
+
+            setClients(prev => 
+                prev.map(client => client.id === id ? { ...client, active: false } : client))
+        }
+        catch (error) {
+            console.error("Error ao desativar cliente".error)
+            alert("Não foi possível desativar cliente")
+        }
+    }
 
     useEffect(() => {
         async function loadClients() {
@@ -45,9 +66,9 @@ function Clients() {
                         Gerencie seus clientes
                     </p>
                 </div>
-                <button className="rounded-lg bg-blue-600 px-5 -py-3 font-medium text-white hover:bg-blue-700">
+                <Link to={"/clientes/novo"} className="rounded-lg bg-blue-600 px-5 -py-3 font-medium text-white hover:bg-blue-700">
                     + Novo cliente
-                </button>
+                </Link>
             </div>
 
             <div className="mt-8 overflow-hidden rounded-xl bg-white shadow">
@@ -105,10 +126,17 @@ function Clients() {
 
                                 <td className="px-6 py-4">
 
-                                    {client.active
-                                        ? "Ativo"
-                                        : "Inativo"
-                                    }
+                                    <span className={client.active
+                                        ? "rounded-full bg-green-100 px-3 py-1 text-sm text-green-700"
+                                        : "rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-600"
+                                    }>
+
+
+                                        {client.active
+                                            ? "Ativo"
+                                            : "Inativo"
+                                        }
+                                    </span>
 
                                 </td>
 
@@ -118,9 +146,22 @@ function Clients() {
                                         to={`/clientes/${client.id}`}
                                         className="font-medium text-blue-600 hover:underline"
                                     >
-                                        Ver detalhes
+                                        [Ver]
                                     </Link>
 
+                                    <Link
+                                        to={`/clientes/${client.id}/editar`}
+                                        className="font-medium text-blue-600 hover:underline"
+                                    >
+                                        [Editar]
+                                    </Link>
+
+                                    <button
+                                        onClick={() => { handleDeactivate(client.id) }}
+                                        className="font-medium text-blue-600 hover:underline"
+                                    >
+                                        [Desativar]
+                                    </button>
                                 </td>
 
                             </tr>

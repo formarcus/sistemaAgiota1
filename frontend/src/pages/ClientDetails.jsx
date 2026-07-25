@@ -4,6 +4,7 @@ import api from "../services/api";
 import { formatMoney } from "../utils/formatMoney";
 
 function ClientesDetails() {
+    
     const { id } = useParams()
 
     const [summary, setSummary] = useState(null)
@@ -17,8 +18,8 @@ function ClientesDetails() {
                     summaryResponse,
                     debtsResponse
                 ] = await Promise.all([
-                    api.get(`/users/${id}/debts`),
-                    api.get(`/users/${id}/summary`)
+                    api.get(`/users/${id}/summary`),
+                    api.get(`/users/${id}/debts`)
                 ])
 
                 setSummary(summaryResponse.data)

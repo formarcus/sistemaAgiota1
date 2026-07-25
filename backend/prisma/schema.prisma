@@ -20,6 +20,7 @@ model User {
   email     String?
   active    Boolean @default(true)
   createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
 
   debts     Debt[]
 }
@@ -28,8 +29,10 @@ model Debt {
   id            Int @id @default(autoincrement())
   description   String
   amount        Int
+  status        DebtStatus @default(OPEN)
   dueDate       DateTime?
   createdAt     DateTime @default(now())
+  updateAt      DateTime @updatedAt
 
   userId        Int
   user          User     @relation(fields: [userId], references: [id])
@@ -40,8 +43,15 @@ model Debt {
 model Payment {
   id            Int @id @default(autoincrement())
   amount        Int
-  paidAt        DateTime @default(now())
+  //paidAt        DateTime @default(now())
+  createdAt     DateTime @default(now())
 
   debtId        Int
   debt          Debt @relation(fields: [debtId], references: [id])
+}
+
+enum DebtStatus {
+  OPEN
+  PAID
+  CANCELLED
 }

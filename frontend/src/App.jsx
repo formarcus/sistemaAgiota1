@@ -6,8 +6,12 @@ import {
 } from "react-router-dom";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
+//
 import Clients from "./pages/Clients";
 import ClientesDetails from "./pages/ClientDetails";
+import ClientFormPage from "./pages/ClientFormPage";
+//
+import Debts from "./pages/Debts"
 
 function App(){
   return (
@@ -16,8 +20,13 @@ function App(){
         <Route element={<Layout/>}>
           <Route path="/" element={<Navigate to={"/dashboard"} replace/>}/>
           <Route path="/dashboard" element={<Dashboard/>}/>
+
           <Route path="/clientes" element={<Clients/>}/>
           <Route path="/clientes/:id" element={<ClientesDetails/>}/>
+          <Route path="/clientes/novo" element={<ClientFormPage/>}/>
+          <Route path="/clientes/:id/editar" element={<ClientFormPage/>}/>
+
+          <Route path="/dividas" element={<Debts/>} />
         </Route>
       </Routes>
     </BrowserRouter>

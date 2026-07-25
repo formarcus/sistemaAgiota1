@@ -3,6 +3,9 @@ import { fromCents } from "../utils/money.ts"
 
 async function findAllUsers(){
     return await prisma.user.findMany({
+        where: {
+            active: true
+        },
         orderBy: {
             createdAt: "desc"
         }

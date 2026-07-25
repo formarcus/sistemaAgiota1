@@ -1,5 +1,4 @@
 
-import {prisma} from "../prisma.ts";
 import { userService } from "../services/userService.ts";
 
 async function getUsers(req:any, res:any){

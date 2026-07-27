@@ -42,9 +42,9 @@ async function getDashboard(){
     return {
         totalUsers : users.filter((user:any) => user.active).length,
         usersWithDebt,
-        totalDebtAmoumnt: fromCents(totalDebtAmoumnt),
-        totalPaid:fromCents(totalPaid),
-        totalOwed:fromCents(totalOwed)
+        totalDebtAmoumnt: totalDebtAmoumnt,
+        totalPaid:totalPaid,
+        totalOwed:totalOwed
     }
 } 
 

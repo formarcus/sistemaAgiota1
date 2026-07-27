@@ -45,6 +45,7 @@ model Payment {
   amount        Int
   //paidAt        DateTime @default(now())
   createdAt     DateTime @default(now())
+  description   String?
 
   debtId        Int
   debt          Debt @relation(fields: [debtId], references: [id])

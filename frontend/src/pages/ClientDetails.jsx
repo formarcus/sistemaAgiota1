@@ -4,7 +4,7 @@ import api from "../services/api";
 import { formatMoney } from "../utils/formatMoney";
 
 function ClientesDetails() {
-    
+
     const { id } = useParams()
 
     const [summary, setSummary] = useState(null)
@@ -21,7 +21,7 @@ function ClientesDetails() {
                     api.get(`/users/${id}/summary`),
                     api.get(`/users/${id}/debts`)
                 ])
-
+                
                 setSummary(summaryResponse.data)
                 setDebts(debtsResponse.data)
             }
@@ -56,19 +56,29 @@ function ClientesDetails() {
                 ← Voltar para clientes
             </Link>
 
+            <div className="flex items-center justify-between">
 
-            <div className="mt-6">
+                <div>
 
-                <h1 className="text-3xl font-bold">
-                    {summary?.user?.name}
-                </h1>
+                    <h1 className="text-3xl font-bold">
+                        {summary?.user?.name}
+                    </h1>
 
-                <p className="mt-1 text-gray-500">
-                    {summary?.user?.phone}
-                </p>
+                    <p className="mt-1 text-gray-500">
+                        {summary?.user?.phone}
+                    </p>
+
+                </div>
+
+
+                <Link
+                    to={`/dividas/nova/${id}`}
+                    className="rounded-lg bg-blue-600 px-5 py-3 font-medium text-white hover:bg-blue-700"
+                >
+                    + Nova dívida
+                </Link>
 
             </div>
-
 
             <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
 

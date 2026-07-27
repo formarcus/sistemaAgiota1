@@ -24,6 +24,22 @@ function Debts() {
         loadDebts()
     }, [])
 
+    async function handleDelete(id) {
+        const confirmed = window.confirm("Deseja realmente excluir esta dívida?")
+
+        if (!confirmed) {
+            return
+        }
+
+        try {
+            await api.delete(`/debts/${id}`)
+            setDebts(prev => prev.filter(debt => debt.id !== id))
+        }
+        catch (error) {
+            console.error("Erro ao excluir dívida", error)
+            alert("Não foi possível excluir a dívida")
+        }
+    }
 
     if (loading) {
 
@@ -45,7 +61,6 @@ function Debts() {
                     <h1 className="text-3xl font-bold text-gray-800">
                         Dívidas
                     </h1>
-
                     <p className="mt-1 text-gray-500">
                         Controle todas as dívidas cadastradas
                     </p>
@@ -53,11 +68,12 @@ function Debts() {
                 </div>
 
 
-                <button className="rounded-lg bg-blue-600 px-5 py-3 font-medium text-white hover:bg-blue-700">
-
+                <Link
+                    to="/dividas/nova"
+                    className="rounded-lg bg-blue-600 px-5 py-3 font-medium text-white hover:bg-blue-700"
+                >
                     + Nova dívida
-
-                </button>
+                </Link>
 
             </div>
 
@@ -90,6 +106,9 @@ function Debts() {
                                 Saldo
                             </th>
 
+                            <th className="px-6 py-4 text-left">
+                                Ações
+                            </th>
                         </tr>
 
                     </thead>
@@ -98,7 +117,7 @@ function Debts() {
                     <tbody>
 
                         {debts.map(debt => {
-                            
+
                             const totalPaid =
                                 debt.payments.reduce(
                                     (total, payment) =>
@@ -107,9 +126,7 @@ function Debts() {
                                 )
 
 
-                            const totalOwed =
-                                debt.amount -
-                                totalPaid
+                            const totalOwed = Math.max(0, debt.amount - totalPaid)
 
 
                             return (
@@ -156,6 +173,36 @@ function Debts() {
                                         {formatMoney(
                                             totalOwed
                                         )}
+
+                                    </td>
+
+                                    <td className="px-6 py-4">
+
+                                        <div className="flex gap-4">
+                                            <Link
+                                                to={`/dividas/${debt.id}`}
+                                                className="text-blue-600 hover:underline"
+                                            >
+                                                Ver
+                                            </Link>
+                                            
+                                            <Link
+                                                to={`/dividas/${debt.id}/editar`}
+                                                className="text-blue-600 hover:underline"
+                                            >
+                                                Editar
+                                            </Link>
+
+                                            <button
+                                                onClick={() =>
+                                                    handleDelete(debt.id)
+                                                }
+                                                className="text-red-600 hover:underline"
+                                            >
+                                                Excluir
+                                            </button>
+
+                                        </div>
 
                                     </td>
 

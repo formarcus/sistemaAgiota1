@@ -81,7 +81,7 @@ function Dashboard() {
               </p>
 
               <p className="mt-2 text-3xl font-bold">
-                {formatMoney(dashboard?.totalPaid?.toFixed(2) ?? "0,00")}
+                {formatMoney(dashboard?.totalPaid ?? "0,00")}
               </p>
 
             </div>
@@ -94,7 +94,7 @@ function Dashboard() {
               </p>
 
               <p className="mt-2 text-3xl font-bold">
-                {formatMoney(dashboard?.totalOwed?.toFixed(2) ?? "0,00")}
+                {formatMoney(dashboard?.totalOwed ?? "0,00")}
               </p>
 
             </div>

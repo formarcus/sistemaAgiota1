@@ -1,4 +1,3 @@
-import { prismaVersion } from "../../generated/prisma/internal/prismaNamespace"
 import { prisma } from "../prisma.ts"
 
 async function findAllDebts() {
@@ -80,11 +79,33 @@ async function updateDebt(id: any, data: any) {
 }
 
 async function deleteDebt(id: any) {
+    const debt = await prisma.debt.delete({
+        where: {
+            id
+        },
+        include: {
+            payments: true
+        }
+
+    })
+
+    if(!debt) {
+        throw new Error(
+            "DEBT_NOT_FOUND"
+        );
+    }
+
+    if(debt.payments.length > 0) {
+        throw new Error(
+            "DEBT_HAS_PAYMENTS"
+        )
+    }
+
     return await prisma.debt.delete({
         where: {
             id
         }
-    })
+    });
 }
 
 export const debtService = {

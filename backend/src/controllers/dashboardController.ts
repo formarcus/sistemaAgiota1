@@ -2,6 +2,7 @@ import {dashboardService} from "../services/dashboardeService.ts"
 
 async function getDashboard(req: any, res: any) {
     try {
+        
         const dashboard = await dashboardService.getDashboard();
         return res.json(dashboard);
     }

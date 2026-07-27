@@ -1,63 +1,71 @@
 import {prisma} from "../prisma.ts"
 import { toCents, fromCents } from "../utils/money.ts";
+import { paymentService } from "../services/paymentService.ts";
 
-async function createPayment(req:any, res:any) {
+async function getPaymentsByDebt(req:any, res:any) {
     try{
-        const {
-            amount,
-            debtId
-        } = req.body;
+        const debtId = req.params.debtId;
 
-        const debt = await prisma.debt.findUnique({
-            where: {
-                id: Number(debtId)
-            },
-            include: {
-                payments: true
-            }
-        })
+        const payments = await paymentService.findPaymentByDebtId(debtId);
 
-        if(!debt){
-            return res.status(404).json({
-                error: "Dívida não encontrada"
-            })
-        }
-
-        const totalPaid = debt.payments.reduce(
-            (total, payment) => total + payment.amount,
-            0
-        )
-
-        const remaining = debt.amount - totalPaid
-        const paymentAmount = toCents(amount)
-
-        if(paymentAmount > remaining){
-            return res.status(400).json({
-                error: "O pagamento é maior que o saldo da dívida"
-            })
-        }
+        return res.json(payments)
         
-        const payment = await prisma.payment.create({
-            data: {
-                amount: paymentAmount,
-                debtId: Number(debtId)
-            }
-        })
-
-        return res.status(201).json({
-            ...payment,
-            amount: fromCents(payment.amount)
-        })
     }
     catch(error){
         console.error(error)
 
         return res.status(500).json({
-            error: "Erro ao registrar pagamento"
+            error: "Erro ao buscar pagamentos"
         })
     }    
 }
 
+async function createPayment(req:any, res:any) {
+    try{
+        debugger;
+        const payment = await paymentService.createPayment({
+            amount:Number(req.body.amount),
+            description:req.body.description,
+            debtId:Number(req.body.debtId)
+        });
+
+        return res.status(201).json(payment);
+    }
+    catch(error:any){
+        console.error(error)
+
+        if(error.message === "DEBT_NOT_FOUND"){
+            return res.status(404).json({
+                error: "Dívida não encontrada"
+            })
+        }
+
+        if(error.message === "DEBT_CANCELLED"){
+            return res.status(400).json({
+                error: "Dívida cancelada"
+            })
+        }
+
+        if(error.message === "DEBT_ALREADY_PAID"){
+            return res.status(400).json({
+                error: "Dívida já quitada"
+            })
+        }
+
+        if(error.message === "PAYMENT_AMOUNT_EXCEEDS_DEBT"){
+            return res.status(400).json({
+                error: "Valor do pagamento excede o valor da dívida"
+            })
+        }
+
+        return res.status(500).json({
+            error: "Erro ao registrar pagamento"
+        })
+    }
+
+}
+
 export {
-    createPayment
+    createPayment,
+    getPaymentsByDebt
 }

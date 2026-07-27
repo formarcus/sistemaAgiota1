@@ -8,7 +8,7 @@ async function getDebts(req: any, res: any) {
         const debts = await debtService.findAllDebts();
         return res.json(debts);
     }
-    catch (error) {
+    catch (error:any) {
         console.error(error);
 
         return res.status(500).json({
@@ -61,7 +61,7 @@ async function getDebtById(req: any, res: any) {
         // })
 
     }
-    catch (error) {
+    catch (error:any) {
         console.error(error)
 
         return res.status(500).json({
@@ -79,7 +79,7 @@ async function getDebtsByUser(req: any, res: any) {
 
         return res.json(debts);
 
-    } catch (error) {
+    } catch (error:any) {
 
         console.error(error);
 
@@ -143,7 +143,7 @@ async function getDebtSummary(req: any, res: any) {
                 : "OPEN"
         });
     }
-    catch (error) {
+    catch (error:any) {
         console.error(error)
 
         return res.satus(500).json({
@@ -173,7 +173,7 @@ async function getDebtPayment(req: any, res: any) {
                 debtId: debtId
             },
             orderBy: {
-                paidAt: "desc"
+                createdAt: "desc"
             }
         });
 
@@ -181,11 +181,11 @@ async function getDebtPayment(req: any, res: any) {
             payments.map(payment => ({
                 id: payment.id,
                 amount: fromCents(payment.amount),
-                paidAt: payment.paidAt
+                createdAt: payment.createdAt
             }))
         );
     }
-    catch (error) {
+    catch (error:any) {
         console.error(error);
 
         return res.status(500).json({
@@ -268,7 +268,7 @@ async function updatedDebt(req: any, res: any) {
         //     amount: fromCents(updatedDebt.amount)
         // })
     }
-    catch (error) {
+    catch (error:any) {
         console.error(error)
 
         return res.status(500).json({
@@ -305,9 +305,14 @@ async function deleteDebt(req: any, res: any) {
             message: "Dívida excluída com sucesso"
         })
     }
-    catch (error) {
+    catch (error:any) {
         console.error(error)
 
+        if(error.message === "DEBT_NOT_FOUND") {
+            return res.status(400).json({
+                 error: "Não é possivel excluir uma dívida que não possui pagamentos"
+             })
+        }
         return res.status(500).json({
             error: "Erro ao exluir dívida"
         })

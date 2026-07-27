@@ -58,7 +58,7 @@ function Clients() {
         <div>
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3x1 font-bold text-gray-800">
+                    <h1 className="text-3xl font-bold text-gray-800">
                         Clientes
                     </h1>
 
@@ -66,9 +66,11 @@ function Clients() {
                         Gerencie seus clientes
                     </p>
                 </div>
-                <Link to={"/clientes/novo"} className="rounded-lg bg-blue-600 px-5 -py-3 font-medium text-white hover:bg-blue-700">
+                <Link to={"/clientes/novo"} 
+                      className="rounded-lg bg-blue-600 px-5 py-3 font-medium text-white hover:bg-blue-700">
                     + Novo cliente
                 </Link>
+                   
             </div>
 
             <div className="mt-8 overflow-hidden rounded-xl bg-white shadow">
@@ -149,6 +151,7 @@ function Clients() {
                                         [Ver]
                                     </Link>
 
+             
                                     <Link
                                         to={`/clientes/${client.id}/editar`}
                                         className="font-medium text-blue-600 hover:underline"

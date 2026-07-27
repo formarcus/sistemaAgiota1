@@ -90,13 +90,9 @@ async function getUserSummary(id: any) {
             email: user.email
         },
 
-        totalDebts: fromCents(totalDebts),
-
-        totalPaid: fromCents(totalPaid),
-
-        totalOwed: fromCents(
-            totalDebts - totalPaid
-        )
+        totalDebts: totalDebts,
+        totalPaid: totalPaid,
+        totalOwed: totalDebts - totalPaid
     };
 }
 
@@ -133,9 +129,9 @@ async function getUserDebts(id:any) {
         return {
             id: debt.id,
             description: debt.description,
-            amount: fromCents(debt.amount),
-            totalPaid: fromCents(totalPaid),
-            totalOwed: fromCents(totalOwed),
+            amount: debt.amount,
+            totalPaid: totalPaid,
+            totalOwed: totalOwed,
             dueDate: debt.dueDate,
             status: totalOwed === 0 ? "PAID":"OPEN" 
         }

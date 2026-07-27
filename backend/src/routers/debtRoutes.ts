@@ -19,6 +19,6 @@ router.get('/:id/payments', getDebtPayment)
 router.get('/:id/summary', getDebtSummary)
 router.get('/:id', getDebtById)
 router.put('/:id', updatedDebt)
-router.post('/:id', deleteDebt)
+router.delete('/:id', deleteDebt)
 
 export {router}

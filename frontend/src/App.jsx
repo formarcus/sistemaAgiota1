@@ -12,6 +12,10 @@ import ClientesDetails from "./pages/ClientDetails";
 import ClientFormPage from "./pages/ClientFormPage";
 //
 import Debts from "./pages/Debts"
+import DebtFormPage from "./pages/DebtFormPage"
+import DebtDetails from "./pages/DebtDetails"
+//
+
 
 function App(){
   return (
@@ -27,6 +31,12 @@ function App(){
           <Route path="/clientes/:id/editar" element={<ClientFormPage/>}/>
 
           <Route path="/dividas" element={<Debts/>} />
+          <Route path="/dividas/nova" element={<DebtFormPage/>} />
+          <Route path="/dividas/nova/:userId" element={<DebtFormPage/>} />
+          <Route path="/dividas/:id/editar" element={<DebtFormPage/>} />
+          <Route path="/dividas/:id" element={<DebtDetails/>} />
+
+
         </Route>
       </Routes>
     </BrowserRouter>

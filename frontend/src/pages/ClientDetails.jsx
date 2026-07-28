@@ -7,8 +7,8 @@ function ClientesDetails() {
 
     const { id } = useParams()
 
-    const [summary, setSummary] = useState(null)
     const [debts, setDebts] = useState([])
+    const [summary, setSummary] = useState(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -21,7 +21,7 @@ function ClientesDetails() {
                     api.get(`/users/${id}/summary`),
                     api.get(`/users/${id}/debts`)
                 ])
-                
+
                 setSummary(summaryResponse.data)
                 setDebts(debtsResponse.data)
             }
@@ -38,13 +38,16 @@ function ClientesDetails() {
         loadClient()
     }, [id])
 
-    if (loading) {
-        return (
-            <p>
-                Carregando cliente...
-            </p>
-        )
-    }
+  if(loading){
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+          <p className="text-gray-600">
+            Carregando...
+          </p>
+      </div>
+    )
+  }
+  
     return (
 
         <div>
@@ -80,18 +83,17 @@ function ClientesDetails() {
 
             </div>
 
-            <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-
+            <div className="mt-8 grid gap-6 md:grid-cols-3">
 
                 <div className="rounded-xl bg-white p-6 shadow">
 
                     <p className="text-sm text-gray-500">
-                        Total em dívidas
+                        Total emprestado
                     </p>
 
                     <p className="mt-2 text-2xl font-bold">
                         {formatMoney(
-                            summary?.totalDebts ?? 0
+                            summary.summary.totalDebts
                         )}
                     </p>
 
@@ -101,12 +103,12 @@ function ClientesDetails() {
                 <div className="rounded-xl bg-white p-6 shadow">
 
                     <p className="text-sm text-gray-500">
-                        Total pago
+                        Total recebido
                     </p>
 
-                    <p className="mt-2 text-2xl font-bold">
+                    <p className="mt-2 text-2xl font-bold text-green-600">
                         {formatMoney(
-                            summary?.totalPaid ?? 0
+                            summary.summary.totalPaid
                         )}
                     </p>
 
@@ -119,17 +121,15 @@ function ClientesDetails() {
                         Total a receber
                     </p>
 
-                    <p className="mt-2 text-2xl font-bold">
+                    <p className="mt-2 text-2xl font-bold text-red-600">
                         {formatMoney(
-                            summary?.totalOwed ?? 0
+                            summary.summary.totalRemaining
                         )}
                     </p>
 
                 </div>
 
-
             </div>
-
 
             <div className="mt-8 rounded-xl bg-white shadow">
 

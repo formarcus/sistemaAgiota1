@@ -51,50 +51,6 @@ async function deleteUser(id:any) {
         }
     });
 }
-async function getUserSummary(id: any) {
-
-    const user = await prisma.user.findUnique({
-        where: {
-            id
-        },
-        include: {
-            debts: {
-                include: {
-                    payments: true
-                }
-            }
-        }
-    });
-
-    if (!user) {
-        return null;
-    }
-
-    let totalDebts = 0;
-    let totalPaid = 0;
-
-    for (const debt of user.debts) {
-
-        totalDebts += debt.amount;
-
-        for (const payment of debt.payments) {
-            totalPaid += payment.amount;
-        }
-    }
-
-    return {
-        user: {
-            id: user.id,
-            name: user.name,
-            phone: user.phone,
-            email: user.email
-        },
-
-        totalDebts: totalDebts,
-        totalPaid: totalPaid,
-        totalOwed: totalDebts - totalPaid
-    };
-}
 
 async function getUserDebts(id:any) {
     
@@ -159,6 +115,5 @@ export const userService = {
     updateUser,
     deleteUser,
     deactivateUser,
-    getUserSummary,
     getUserDebts
 }

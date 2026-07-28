@@ -58,14 +58,17 @@ function DebtFormPage() {
             setLoading(false);
         }
 
-        if (loadingData) {
-            return (
-                <p>
-                    Carregando...
-                </p>
-            )
-        }
     }
+
+  if(loading){
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+          <p className="text-gray-600">
+            Carregando...
+          </p>
+      </div>
+    )
+  }
 
     return (
 

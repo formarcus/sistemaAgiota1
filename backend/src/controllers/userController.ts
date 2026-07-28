@@ -38,29 +38,6 @@ async function getUserById(req:any, res:any) {
     }
 }
 
-async function getUserSummary(req: any, res: any){
-    try{
-        const id = Number(req.params.id)
-
-        const summary = await userService.getUserSummary(id)
-        
-        if(!summary){
-            return res.status(404).json({
-                error: "Usuário não encontrado"
-            })
-        }
-        
-        return res.json(summary);
-    }
-    catch(error){
-        console.error(error)
-
-        return res.status(500).json({
-            error: "Erro ao calcular resumo usuário"
-        })
-    }
-}
-
 async function getUserDebts(req:any, res:any){
     try{
         const id = Number(req.params.id)
@@ -186,10 +163,9 @@ async function deactivateUser(req: any, res: any){
     
 }
 
-export { 
+export const userController = { 
     getUsers,
     getUserById, 
-    getUserSummary,
     getUserDebts,
     createdUser,
     updateUser, 

@@ -13,68 +13,77 @@ async function findPaymentByDebtId(debtId: any) {
 
 async function createPayment(data: any) {
     
-    const debt = await prisma.debt.findUnique({
-        where: {
-            id: data.debtId
-        },
-        include: {
-            payments: true
-        }
-    })
+    await prisma.$transaction(async (tx) => {
 
-    if (!debt) {
-        throw new Error(
-            "DEBT_NOT_FOUND"
-        );
-    }
-    
-    if (debt.status === "CANCELLED") {
-        throw new Error(
-            "DEBT_CANCELLED"
-        );
-    }
-
-    if (debt.status === "PAID") {
-        throw new Error(
-            "DEBT_ALREADY_PAID"
-        );
-    }
-
-    const totalPaid = debt.payments.reduce(
-        (total, payment) => total + payment.amount,
-        0
-    );
-
-    const remaining = debt.amount - totalPaid;
-
-    if (data.amount > remaining) {
-        throw new Error(
-            "PAYMENT_AMOUNT_EXCEEDS_DEBT"
-        );
-    }
-
-    const payment = await prisma.payment.create({
-        data: {
-            amount: data.amount,
-            description: data.description,
-            debtId: data.debtId
-        }
-    })
-
-    const newTotalPaid = totalPaid + data.amount;
-
-    if (newTotalPaid === debt.amount) {
-        await prisma.debt.update({
+        const debt = await tx.debt.findUnique({
             where: {
-                id: debt.id
+                id: data.debtId
             },
-            data: {
-                status: "PAID"
+            include: {
+                payments: true
             }
         })
-    }
 
-    return payment;
+        if (!debt) {
+            throw new Error(
+                "DEBT_NOT_FOUND"
+            );
+        }
+
+        if (debt.status === "CANCELLED") {
+            throw new Error(
+                "DEBT_CANCELLED"
+            );
+        }
+
+        if (debt.status === "PAID") {
+            throw new Error(
+                "DEBT_ALREADY_PAID"
+            );
+        }
+
+        const totalPaid = debt.payments.reduce(
+            (total, payment) => total + payment.amount,
+            0
+        );
+
+        const remaining = debt.amount - totalPaid;
+
+        if (data.amount <= 0) {
+            throw new Error(
+                "INVALID_PAYMENT_AMOUNT"
+            );
+        }
+
+        if (data.amount > remaining) {
+            throw new Error(
+                "PAYMENT_AMOUNT_EXCEEDS_DEBT"
+            );
+        }
+
+        const payment = await tx.payment.create({
+            data: {
+                amount: data.amount,
+                description: data.description,
+                debtId: data.debtId
+            }
+        })
+
+        const newTotalPaid = totalPaid + data.amount;
+
+        if (newTotalPaid === debt.amount) {
+            await tx.debt.update({
+                where: {
+                    id: debt.id
+                },
+                data: {
+                    status: "PAID"
+                }
+            })
+        }
+
+        return payment;
+    })
 }
 
 export const paymentService = {

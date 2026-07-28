@@ -41,15 +41,15 @@ function Debts() {
         }
     }
 
-    if (loading) {
-
-        return (
-            <p>
-                Carregando dívidas...
-            </p>
-        )
-
-    }
+  if(loading){
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+          <p className="text-gray-600">
+            Carregando...
+          </p>
+      </div>
+    )
+  }
     return (
 
         <div>

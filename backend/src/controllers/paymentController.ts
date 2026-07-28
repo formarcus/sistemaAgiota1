@@ -22,7 +22,6 @@ async function getPaymentsByDebt(req:any, res:any) {
 
 async function createPayment(req:any, res:any) {
     try{
-        debugger;
         const payment = await paymentService.createPayment({
             amount:Number(req.body.amount),
             description:req.body.description,
@@ -49,6 +48,12 @@ async function createPayment(req:any, res:any) {
         if(error.message === "DEBT_ALREADY_PAID"){
             return res.status(400).json({
                 error: "Dívida já quitada"
+            })
+        }
+
+        if(error.message === "INVALID_PAYMENT_AMOUNT"){
+            return res.status(400).json({
+                error: "Valor do pagamento deve ser maior que zero"
             })
         }
 

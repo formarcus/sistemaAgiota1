@@ -1,25 +1,15 @@
 import express from "express";
-import { 
-    getUsers, 
-    getUserById,
-    getUserSummary,
-    getUserDebts,
-    createdUser, 
-    updateUser,
-    deactivateUser
- } from "../controllers/userController.ts"
-
+import { userSummaryController } from "../controllers/userSummaryController.ts";
+import { userController } from "../controllers/userController.ts"
 
 const router = express.Router();
 
-// const { getUsers } = require("../controllers/userController");
-
-router.get('/', getUsers);
-router.post('/', createdUser);
-router.get('/:id', getUserById);
-router.get('/:id/summary', getUserSummary);
-router.get('/:id/debts', getUserDebts);
-router.put('/:id', updateUser);
-router.delete('/:id', deactivateUser);
+router.get('/', userController.getUsers);
+router.post('/', userController.createdUser);
+router.get('/:id', userController.getUserById);
+router.get('/:id/summary', userSummaryController.getUserSummary);
+router.get('/:id/debts', userController.getUserDebts);
+router.put('/:id', userController.updateUser);
+router.delete('/:id', userController.deactivateUser);
 
 export { router } 
